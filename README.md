@@ -34,7 +34,7 @@ and add the dependency:
 ```gradle
 dependencies {
   ...
-  compile 'com.github.tinsukE:icekick:v0.1'
+  compile 'com.github.tinsukE:icekick:0.1'
   ...
 }
 ```

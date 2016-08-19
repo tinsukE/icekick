@@ -9,7 +9,7 @@ class MyActivity : Activity() {
   // A state that can't be null, needs a default value
   private var nonNullState: Int by state(0)
   
-  // A shorter version of the above, with type infered by the default value
+  // A shorter version of the above, with type inferred by the default value
   private var nonNullShorterState by state(0)
 }
 ```
@@ -43,7 +43,7 @@ dependencies {
 Setup
 -------
 
-To enable __IceKick__, add these to your classes:
+To enable it, add these to your classes:
 
 ```kotlin
 class MyActivity : Activity() {

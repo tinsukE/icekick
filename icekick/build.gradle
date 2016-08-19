@@ -1,12 +1,15 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.tinsukE'
 
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
 
     defaultConfig {
-        minSdkVersion 7
+        minSdkVersion 9
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -28,6 +31,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
+
 repositories {
     mavenCentral()
 }

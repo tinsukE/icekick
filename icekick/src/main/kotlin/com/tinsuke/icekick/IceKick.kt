@@ -8,79 +8,62 @@ import android.view.View
 import java.io.Serializable
 import java.util.*
 
-private class IceKick {
+object IceKick {
+    private const val PROPERTY_PREFIX = "iceKick_"
+    private const val NULLABLE_PREFIX = "iceKick_nullable_"
+    private const val LATEINIT_PREFIX = "iceKick_lateinit_"
 
-    companion object {
+    internal data class SavedProperties(
+            val properties: MutableList<SavedProperty<*, *>> = mutableListOf(),
+            val nullableProperties: MutableList<NullableSavedProperty<*, *>> = mutableListOf(),
+            val lateinitProperties: MutableList<LateinitSavedProperty<*, *>> = mutableListOf()
+    )
 
-        data class SavedProperties(
-                val properties: MutableList<SavedProperty<*, *>> = mutableListOf(),
-                val nullableProperties: MutableList<NullableSavedProperty<*, *>> = mutableListOf(),
-                val lateinitProperties: MutableList<LateinitSavedProperty<*, *>> = mutableListOf()
-        )
+    internal val savedInstances = WeakHashMap<Any, SavedProperties>()
 
-        val savedInstances = WeakHashMap<Any, SavedProperties>()
+    private fun createOrGetSavedProperties(instance: Any) = savedInstances.getOrPut(instance) { SavedProperties() }
 
-        private fun createSavedProperties(instance: Any): SavedProperties {
-            var savedProperties = savedInstances[instance]
-            if (savedProperties == null) {
-                savedProperties = SavedProperties()
-                savedInstances[instance] = savedProperties
-            }
-            return savedProperties
+    fun <S : Serializable> state(instance: Any) = NullableSavedProperty<Any, S>().apply {
+        createOrGetSavedProperties(instance).nullableProperties.add(this)
+    }
+
+    fun <S : Serializable> state(instance: Any, value: S) = SavedProperty<Any, S>(value).apply {
+        createOrGetSavedProperties(instance).properties.add(this)
+    }
+
+    fun <S : Serializable> latestate(instance: Any) = LateinitSavedProperty<Any, S>().apply {
+        createOrGetSavedProperties(instance).lateinitProperties.add(this)
+    }
+
+    fun freezeInstanceState(instance: Any, outState: Bundle) {
+        val savedProperties = IceKick.savedInstances[instance] ?: return
+        savedProperties.properties.forEachIndexed { index, property ->
+            outState.putSerializable("$PROPERTY_PREFIX$index", property.value)
         }
-
-        fun <S : Serializable> state(instance: Any): NullableSavedProperty<Any, S> {
-            val savedProperties = createSavedProperties(instance)
-            val property = NullableSavedProperty<Any, S>()
-            savedProperties.nullableProperties.add(property)
-            return property
+        savedProperties.nullableProperties.forEachIndexed { index, property ->
+            outState.putSerializable("$NULLABLE_PREFIX$index", property.value)
         }
-
-        fun <S : Serializable> state(instance: Any, value: S): SavedProperty<Any, S> {
-            val savedProperties = createSavedProperties(instance)
-            val property = SavedProperty<Any, S>(value)
-            savedProperties.properties.add(property)
-            return property
-        }
-
-        fun <S : Serializable> latestate(instance: Any): LateinitSavedProperty<Any, S> {
-            val savedProperties = createSavedProperties(instance)
-            val property = LateinitSavedProperty<Any, S>()
-            savedProperties.lateinitProperties.add(property)
-            return property
-        }
-
-        fun freezeInstanceState(instance: Any, outState: Bundle) {
-            val savedProperties = IceKick.savedInstances[instance] ?: return
-            for ((index, property) in savedProperties.properties.withIndex()) {
-                outState.putSerializable("iceKick_$index", property.value)
-            }
-            for ((index, property) in savedProperties.nullableProperties.withIndex()) {
-                outState.putSerializable("iceKick_nullable_$index", property.value)
-            }
-            for ((index, property) in savedProperties.lateinitProperties.withIndex()) {
-                outState.putSerializable("iceKick_lateinit_$index", property.value)
-            }
-        }
-
-        fun unfreezeInstanceState(instance: Any, savedInstanceState: Bundle?) {
-            if (savedInstanceState == null) {
-                return
-            }
-
-            val savedProperties = IceKick.savedInstances[instance] ?: return
-            for ((index, property) in savedProperties.properties.withIndex()) {
-                property.value = savedInstanceState.getSerializable("iceKick_$index") ?: continue
-            }
-            for ((index, property) in savedProperties.nullableProperties.withIndex()) {
-                property.value = savedInstanceState.getSerializable("iceKick_nullable_$index")
-            }
-            for ((index, property) in savedProperties.lateinitProperties.withIndex()) {
-                property.value = savedInstanceState.getSerializable("iceKick_lateinit_$index") ?: continue
-            }
+        savedProperties.lateinitProperties.forEachIndexed { index, property ->
+            outState.putSerializable("$LATEINIT_PREFIX$index", property.value)
         }
     }
 
+    fun unfreezeInstanceState(instance: Any, savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            return
+        }
+
+        val savedProperties = IceKick.savedInstances[instance] ?: return
+        savedProperties.properties.forEachIndexed { index, property ->
+            property.value = savedInstanceState.getSerializable("$PROPERTY_PREFIX$index") ?: return@forEachIndexed
+        }
+        savedProperties.nullableProperties.forEachIndexed { index, property ->
+            property.value = savedInstanceState.getSerializable("$NULLABLE_PREFIX$index")
+        }
+        savedProperties.lateinitProperties.forEachIndexed { index, property ->
+            property.value = savedInstanceState.getSerializable("$LATEINIT_PREFIX$index") ?: return@forEachIndexed
+        }
+    }
 }
 
 fun <S : Serializable> Activity.state(): NullableSavedProperty<Any, S> = IceKick.state(this)

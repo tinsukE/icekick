@@ -13,7 +13,7 @@ class MyActivity : Activity() {
   private var nonNullShorterState by state(0)
 
   // A state that behaves as if the variable had `lateinit` modifier
-  private var lateinitState: String by latestate()
+  private var lateinitState: String by lateState()
 }
 ```
 

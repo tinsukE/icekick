@@ -31,7 +31,7 @@ object IceKick {
         createOrGetSavedProperties(instance).properties.add(this)
     }
 
-    fun <S : Serializable> latestate(instance: Any) = LateinitSavedProperty<Any, S>().apply {
+    fun <S : Serializable> lateState(instance: Any) = LateinitSavedProperty<Any, S>().apply {
         createOrGetSavedProperties(instance).lateinitProperties.add(this)
     }
 
@@ -68,25 +68,25 @@ object IceKick {
 
 fun <S : Serializable> Activity.state(): NullableSavedProperty<Any, S> = IceKick.state(this)
 fun <S : Serializable> Activity.state(value: S): SavedProperty<Any, S> = IceKick.state(this, value)
-fun <S : Serializable> Activity.latestate(): LateinitSavedProperty<Any, S> = IceKick.latestate(this)
+fun <S : Serializable> Activity.lateState(): LateinitSavedProperty<Any, S> = IceKick.lateState(this)
 fun Activity.freezeInstanceState(outState: Bundle) = IceKick.freezeInstanceState(this, outState)
 fun Activity.unfreezeInstanceState(savedInstanceState: Bundle?) = IceKick.unfreezeInstanceState(this, savedInstanceState)
 
 fun <S : Serializable> Fragment.state(): NullableSavedProperty<Any, S> = IceKick.state(this)
 fun <S : Serializable> Fragment.state(value: S): SavedProperty<Any, S> = IceKick.state(this, value)
-fun <S : Serializable> Fragment.latestate(): LateinitSavedProperty<Any, S> = IceKick.latestate(this)
+fun <S : Serializable> Fragment.lateState(): LateinitSavedProperty<Any, S> = IceKick.lateState(this)
 fun Fragment.freezeInstanceState(outState: Bundle) = IceKick.freezeInstanceState(this, outState)
 fun Fragment.unfreezeInstanceState(savedInstanceState: Bundle?) = IceKick.unfreezeInstanceState(this, savedInstanceState)
 
 fun <S : Serializable> android.support.v4.app.Fragment.state(): NullableSavedProperty<Any, S> = IceKick.state(this)
 fun <S : Serializable> android.support.v4.app.Fragment.state(value: S): SavedProperty<Any, S> = IceKick.state(this, value)
-fun <S : Serializable> android.support.v4.app.Fragment.latestate(): LateinitSavedProperty<Any, S> = IceKick.latestate(this)
+fun <S : Serializable> android.support.v4.app.Fragment.lateState(): LateinitSavedProperty<Any, S> = IceKick.lateState(this)
 fun android.support.v4.app.Fragment.freezeInstanceState(outState: Bundle) = IceKick.freezeInstanceState(this, outState)
 fun android.support.v4.app.Fragment.unfreezeInstanceState(savedInstanceState: Bundle?) = IceKick.unfreezeInstanceState(this, savedInstanceState)
 
 fun <S : Serializable> View.state(): NullableSavedProperty<Any, S> = IceKick.state(this)
 fun <S : Serializable> View.state(value: S): SavedProperty<Any, S> = IceKick.state(this, value)
-fun <S : Serializable> View.latestate(): LateinitSavedProperty<Any, S> = IceKick.latestate(this)
+fun <S : Serializable> View.lateState(): LateinitSavedProperty<Any, S> = IceKick.lateState(this)
 
 fun View.freezeInstanceState(parcelable: Parcelable?): Parcelable? {
     if (IceKick.savedInstances[this] == null) {

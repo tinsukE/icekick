@@ -23,15 +23,15 @@ object IceKick {
 
     private fun createOrGetSavedProperties(instance: Any) = savedInstances.getOrPut(instance) { SavedProperties() }
 
-    fun <S : Serializable> state(instance: Any) = NullableSavedProperty<Any, S>().apply {
+    fun <S : Serializable> state(instance: Any, onSet: ((S?) -> Unit)? = null) = NullableSavedProperty<Any, S>(onSet).apply {
         createOrGetSavedProperties(instance).nullableProperties.add(this)
     }
 
-    fun <S : Serializable> state(instance: Any, value: S) = SavedProperty<Any, S>(value).apply {
+    fun <S : Serializable> state(instance: Any, value: S, onSet: ((S) -> Unit)? = null) = SavedProperty<Any, S>(value, onSet).apply {
         createOrGetSavedProperties(instance).properties.add(this)
     }
 
-    fun <S : Serializable> lateState(instance: Any) = LateinitSavedProperty<Any, S>().apply {
+    fun <S : Serializable> lateState(instance: Any, onSet: ((S) -> Unit)? = null) = LateinitSavedProperty<Any, S>(onSet).apply {
         createOrGetSavedProperties(instance).lateinitProperties.add(this)
     }
 
@@ -66,27 +66,27 @@ object IceKick {
     }
 }
 
-fun <S : Serializable> Activity.state(): NullableSavedProperty<Any, S> = IceKick.state(this)
-fun <S : Serializable> Activity.state(value: S): SavedProperty<Any, S> = IceKick.state(this, value)
-fun <S : Serializable> Activity.lateState(): LateinitSavedProperty<Any, S> = IceKick.lateState(this)
+fun <S : Serializable> Activity.state(onSet: ((S?) -> Unit)? = null): NullableSavedProperty<Any, S> = IceKick.state(this, onSet)
+fun <S : Serializable> Activity.state(value: S, onSet: ((S) -> Unit)? = null): SavedProperty<Any, S> = IceKick.state(this, value, onSet)
+fun <S : Serializable> Activity.lateState(onSet: ((S) -> Unit)? = null): LateinitSavedProperty<Any, S> = IceKick.lateState(this, onSet)
 fun Activity.freezeInstanceState(outState: Bundle) = IceKick.freezeInstanceState(this, outState)
 fun Activity.unfreezeInstanceState(savedInstanceState: Bundle?) = IceKick.unfreezeInstanceState(this, savedInstanceState)
 
-fun <S : Serializable> Fragment.state(): NullableSavedProperty<Any, S> = IceKick.state(this)
-fun <S : Serializable> Fragment.state(value: S): SavedProperty<Any, S> = IceKick.state(this, value)
-fun <S : Serializable> Fragment.lateState(): LateinitSavedProperty<Any, S> = IceKick.lateState(this)
+fun <S : Serializable> Fragment.state(onSet: ((S?) -> Unit)? = null): NullableSavedProperty<Any, S> = IceKick.state(this, onSet)
+fun <S : Serializable> Fragment.state(value: S, onSet: ((S) -> Unit)? = null): SavedProperty<Any, S> = IceKick.state(this, value, onSet)
+fun <S : Serializable> Fragment.lateState(onSet: ((S) -> Unit)? = null): LateinitSavedProperty<Any, S> = IceKick.lateState(this, onSet)
 fun Fragment.freezeInstanceState(outState: Bundle) = IceKick.freezeInstanceState(this, outState)
 fun Fragment.unfreezeInstanceState(savedInstanceState: Bundle?) = IceKick.unfreezeInstanceState(this, savedInstanceState)
 
-fun <S : Serializable> android.support.v4.app.Fragment.state(): NullableSavedProperty<Any, S> = IceKick.state(this)
-fun <S : Serializable> android.support.v4.app.Fragment.state(value: S): SavedProperty<Any, S> = IceKick.state(this, value)
-fun <S : Serializable> android.support.v4.app.Fragment.lateState(): LateinitSavedProperty<Any, S> = IceKick.lateState(this)
+fun <S : Serializable> android.support.v4.app.Fragment.state(onSet: ((S?) -> Unit)? = null): NullableSavedProperty<Any, S> = IceKick.state(this, onSet)
+fun <S : Serializable> android.support.v4.app.Fragment.state(value: S, onSet: ((S) -> Unit)? = null): SavedProperty<Any, S> = IceKick.state(this, value, onSet)
+fun <S : Serializable> android.support.v4.app.Fragment.lateState(onSet: ((S) -> Unit)? = null): LateinitSavedProperty<Any, S> = IceKick.lateState(this, onSet)
 fun android.support.v4.app.Fragment.freezeInstanceState(outState: Bundle) = IceKick.freezeInstanceState(this, outState)
 fun android.support.v4.app.Fragment.unfreezeInstanceState(savedInstanceState: Bundle?) = IceKick.unfreezeInstanceState(this, savedInstanceState)
 
-fun <S : Serializable> View.state(): NullableSavedProperty<Any, S> = IceKick.state(this)
-fun <S : Serializable> View.state(value: S): SavedProperty<Any, S> = IceKick.state(this, value)
-fun <S : Serializable> View.lateState(): LateinitSavedProperty<Any, S> = IceKick.lateState(this)
+fun <S : Serializable> View.state(onSet: ((S?) -> Unit)? = null): NullableSavedProperty<Any, S> = IceKick.state(this, onSet)
+fun <S : Serializable> View.state(value: S, onSet: ((S) -> Unit)? = null): SavedProperty<Any, S> = IceKick.state(this, value, onSet)
+fun <S : Serializable> View.lateState(onSet: ((S) -> Unit)? = null): LateinitSavedProperty<Any, S> = IceKick.lateState(this, onSet)
 
 fun View.freezeInstanceState(parcelable: Parcelable?): Parcelable? {
     if (IceKick.savedInstances[this] == null) {

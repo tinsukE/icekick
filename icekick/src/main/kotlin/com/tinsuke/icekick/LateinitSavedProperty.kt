@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty
 /**
  * Created by rafalciurkot on 19.08.2016
  */
-class LateinitSavedProperty<in R, T : Serializable> : ReadWriteProperty<R, T> {
+class LateinitSavedProperty<in R, T : Serializable>(val onSet: ((T) -> Unit)? = null) : ReadWriteProperty<R, T> {
     var value: Serializable? = null
 
     override fun getValue(thisRef: R, property: KProperty<*>): T {
@@ -20,5 +20,6 @@ class LateinitSavedProperty<in R, T : Serializable> : ReadWriteProperty<R, T> {
 
     override fun setValue(thisRef: R, property: KProperty<*>, value: T) {
         this.value = value
+        onSet?.invoke(value)
     }
 }

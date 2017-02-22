@@ -3,22 +3,51 @@
 
 ```kotlin
 class MyActivity : Activity() {
-  // A state that can be null
-  private var nullableState: Int? by state()
-  
   // A state that can't be null, needs a default value
   private var nonNullState: Int by state(0)
-  
-  // A shorter version of the above, with type inferred by the default value
-  private var nonNullShorterState by state(0)
 
+  // A state that can be null
+  private var nullableState: Int? by nullableState(Int::class.java)
+
+  
   // A state that behaves as if the variable had `lateinit` modifier
-  private var lateinitState: String by lateState()
+  private var lateinitState: String by lateState(String::class.java)
+
+  // Lazier developers can even shorten them
+  private var nonNullState by state(0) // Type inferred by the default value
+  private var nullableState by nullableState(Int::class.java) // Needs the type information
+  private var lateinitState by lateState(String::class.java)  // Same
 }
 ```
 
-These methods are available on subclasses of `Activity`, `Fragment`,
+These methods work for `Serializable` and `Parcelable` objects and are available on subclasses of `Activity`, `Fragment`,
 the support library `Fragment`, and `View`.
+
+If you need to save/restore an object that can't be made `Serializable` or `Parcelable`, a custom `Bundler` can be specified:
+
+```kotlin
+class MyFragment : Fragment() {
+  // Your custom object
+  class MyData(var value: Int)
+
+  // Your Bundler
+  class MyDataBundler : Bundler {
+    override fun save(bundle: Bundle, key: String, value: Any?) {
+      val myData = value as? MyData ?: return
+      bundle.putInt(key, myData.value)
+    }
+
+    override fun load(bundle: Bundle, key: String): Any? {
+      return MyData(bundle.getInt(key))
+    }
+  }
+
+  // Usage
+  private var myData by state(MyData(100), MyDataBundler())
+  private var nullableMyData by nullableState(MyDataBundler())
+  private var lateinitMyData by lateState(MyDataBundler())
+}
+```
 
 Download
 -------

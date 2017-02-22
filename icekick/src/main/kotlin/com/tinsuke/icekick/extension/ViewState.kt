@@ -1,10 +1,10 @@
-package com.tinsuke.icekick
+package com.tinsuke.icekick.extension
 
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 
-class ViewState(var state: Bundle?, var parcelable: Parcelable?) : Parcelable {
+internal class ViewState(var state: Bundle?, var parcelable: Parcelable?) : Parcelable {
     constructor(source: Parcel) : this(source.readBundle(), source.readParcelable(null))
 
     override fun describeContents() = 0

@@ -119,7 +119,7 @@ class MyView : View {
 License
 -------
 
-    Copyright 2014 Angelo Suzuki
+    Copyright 2016 Angelo Suzuki
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

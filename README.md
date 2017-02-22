@@ -8,7 +8,6 @@ class MyActivity : Activity() {
 
   // A state that can be null
   private var nullableState: Int? by nullableState(Int::class.java)
-
   
   // A state that behaves as if the variable had `lateinit` modifier
   private var lateinitState: String by lateState(String::class.java)

@@ -48,24 +48,24 @@ internal object IceKick {
         }
     }
 
-    fun <T> nullableState(instance: Any,
-                          bundler: Bundler<T>,
-                          beforeChange: ((T?, T?) -> Boolean)?,
-                          afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
+    fun <T> state(instance: Any,
+                  bundler: Bundler<T>,
+                  beforeChange: ((T?, T?) -> Boolean)?,
+                  afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
         return NullableSavedProperty(bundler, beforeChange, afterChange).apply {
             getOrPutSavedProperties(instance).add(this)
         }
     }
-    fun <T : Serializable> serialNullableState(instance: Any,
-                                               beforeChange: ((T?, T?) -> Boolean)?,
-                                               afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
+    fun <T : Serializable> serialState(instance: Any,
+                                       beforeChange: ((T?, T?) -> Boolean)?,
+                                       afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
         return NullableSavedProperty(serializableBundler, beforeChange, afterChange).apply {
             getOrPutSavedProperties(instance).add(this)
         }
     }
-    fun <T : Parcelable> parcelNullableState(instance: Any,
-                                             beforeChange: ((T?, T?) -> Boolean)?,
-                                             afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
+    fun <T : Parcelable> parcelState(instance: Any,
+                                     beforeChange: ((T?, T?) -> Boolean)?,
+                                     afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
         return NullableSavedProperty(parcelableBundler, beforeChange, afterChange).apply {
             getOrPutSavedProperties(instance).add(this)
         }

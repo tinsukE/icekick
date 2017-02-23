@@ -18,13 +18,13 @@ fun <T : Parcelable> View.parcelState(value: T,
                                       beforeChange: ((T, T) -> Boolean)? = null,
                                       afterChange: ((T, T) -> Unit)? = null) = IceKick.parcelState(this, value, beforeChange, afterChange)
 
-fun <T> View.nullableState(bundler: Bundler<T>,
-                           beforeChange: ((T?, T?) -> Boolean)? = null,
-                           afterChange: ((T?, T?) -> Unit)? = null) = IceKick.nullableState(this, bundler, beforeChange, afterChange)
-fun <T : Serializable> View.serialNullableState(beforeChange: ((T?, T?) -> Boolean)? = null,
-                                                afterChange: ((T?, T?) -> Unit)? = null) = IceKick.serialNullableState(this, beforeChange, afterChange)
-fun <T : Parcelable> View.parcelNullableState(beforeChange: ((T?, T?) -> Boolean)? = null,
-                                              afterChange: ((T?, T?) -> Unit)? = null) = IceKick.parcelNullableState(this, beforeChange, afterChange)
+fun <T> View.state(bundler: Bundler<T>,
+                   beforeChange: ((T?, T?) -> Boolean)? = null,
+                   afterChange: ((T?, T?) -> Unit)? = null) = IceKick.state(this, bundler, beforeChange, afterChange)
+fun <T : Serializable> View.serialState(beforeChange: ((T?, T?) -> Boolean)? = null,
+                                        afterChange: ((T?, T?) -> Unit)? = null) = IceKick.serialState(this, beforeChange, afterChange)
+fun <T : Parcelable> View.parcelState(beforeChange: ((T?, T?) -> Boolean)? = null,
+                                      afterChange: ((T?, T?) -> Unit)? = null) = IceKick.parcelState(this, beforeChange, afterChange)
 
 fun <T> View.lateState(bundler: Bundler<T>,
                        beforeChange: ((T?, T) -> Boolean)? = null,

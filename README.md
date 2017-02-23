@@ -16,7 +16,7 @@ class MyActivity : Activity() {
   // And for Parcelable too
   private var resourceUri: Uri by parcelState(MY_DEFAULT_URI)
   private var nullableIntentState: Intent? by parcelState()
-  private val lateinitPacelState: Intent by parcelLateState()
+  private val lateinitParcelState: Intent by parcelLateState()
 }
 ```
 

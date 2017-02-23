@@ -12,28 +12,27 @@ fun <T> View.state(value: T,
                    beforeChange: ((T, T) -> Boolean)? = null,
                    afterChange: ((T, T) -> Unit)? = null) = IceKick.state(this, value, bundler, beforeChange, afterChange)
 fun <T : Serializable> View.serialState(value: T,
-                                        beforeChange: ((T, T) -> Boolean)?,
-                                        afterChange: ((T, T) -> Unit)?) = IceKick.serialState(this, value, beforeChange, afterChange)
-fun <T : Parcelable> View.parcelState(instance: Any,
-                                      value: T,
-                                      beforeChange: ((T, T) -> Boolean)?,
-                                      afterChange: ((T, T) -> Unit)?) = IceKick.parcelState(this, value, beforeChange, afterChange)
+                                        beforeChange: ((T, T) -> Boolean)? = null,
+                                        afterChange: ((T, T) -> Unit)? = null) = IceKick.serialState(this, value, beforeChange, afterChange)
+fun <T : Parcelable> View.parcelState(value: T,
+                                      beforeChange: ((T, T) -> Boolean)? = null,
+                                      afterChange: ((T, T) -> Unit)? = null) = IceKick.parcelState(this, value, beforeChange, afterChange)
 
 fun <T> View.nullableState(bundler: Bundler<T>,
-                           beforeChange: ((T?, T?) -> Boolean)?,
-                           afterChange: ((T?, T?) -> Unit)?) = IceKick.nullableState(this, bundler, beforeChange, afterChange)
-fun <T : Serializable> View.nullableSerialState(beforeChange: ((T?, T?) -> Boolean)?,
-                                                afterChange: ((T?, T?) -> Unit)?) = IceKick.nullableSerialState(this, beforeChange, afterChange)
-fun <T : Parcelable> View.nullableParcelState(beforeChange: ((T?, T?) -> Boolean)?,
-                                              afterChange: ((T?, T?) -> Unit)?) = IceKick.nullableParcelState(this, beforeChange, afterChange)
+                           beforeChange: ((T?, T?) -> Boolean)? = null,
+                           afterChange: ((T?, T?) -> Unit)? = null) = IceKick.nullableState(this, bundler, beforeChange, afterChange)
+fun <T : Serializable> View.serialNullableState(beforeChange: ((T?, T?) -> Boolean)? = null,
+                                                afterChange: ((T?, T?) -> Unit)? = null) = IceKick.serialNullableState(this, beforeChange, afterChange)
+fun <T : Parcelable> View.parcelNullableState(beforeChange: ((T?, T?) -> Boolean)? = null,
+                                              afterChange: ((T?, T?) -> Unit)? = null) = IceKick.parcelNullableState(this, beforeChange, afterChange)
 
 fun <T> View.lateState(bundler: Bundler<T>,
-                       beforeChange: ((T?, T) -> Boolean)?,
-                       afterChange: ((T?, T) -> Unit)?) = IceKick.lateState(this, bundler, beforeChange, afterChange)
-fun <T : Serializable> View.lateSerialState(beforeChange: ((T?, T) -> Boolean)?,
-                                            afterChange: ((T?, T) -> Unit)?) = IceKick.lateSerialState(this, beforeChange, afterChange)
-fun <T : Parcelable> View.lateParcelState(beforeChange: ((T?, T) -> Boolean)?,
-                                          afterChange: ((T?, T) -> Unit)?) = IceKick.lateParcelState(this, beforeChange, afterChange)
+                       beforeChange: ((T?, T) -> Boolean)? = null,
+                       afterChange: ((T?, T) -> Unit)? = null) = IceKick.lateState(this, bundler, beforeChange, afterChange)
+fun <T : Serializable> View.serialLateState(beforeChange: ((T?, T) -> Boolean)? = null,
+                                            afterChange: ((T?, T) -> Unit)? = null) = IceKick.serialLateState(this, beforeChange, afterChange)
+fun <T : Parcelable> View.parcelLateState(beforeChange: ((T?, T) -> Boolean)? = null,
+                                          afterChange: ((T?, T) -> Unit)? = null) = IceKick.parcelLateState(this, beforeChange, afterChange)
 
 fun View.freezeInstanceState(parcelable: Parcelable?): Parcelable? {
     if (IceKick.savedInstances[this] == null) {

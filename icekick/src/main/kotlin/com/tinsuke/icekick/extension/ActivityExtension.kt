@@ -12,28 +12,27 @@ fun <T> Activity.state(value: T,
                        beforeChange: ((T, T) -> Boolean)? = null,
                        afterChange: ((T, T) -> Unit)? = null) = IceKick.state(this, value, bundler, beforeChange, afterChange)
 fun <T : Serializable> Activity.serialState(value: T,
-                                            beforeChange: ((T, T) -> Boolean)?,
-                                            afterChange: ((T, T) -> Unit)?) = IceKick.serialState(this, value, beforeChange, afterChange)
-fun <T : Parcelable> Activity.parcelState(instance: Any,
-                                          value: T,
-                                          beforeChange: ((T, T) -> Boolean)?,
-                                          afterChange: ((T, T) -> Unit)?) = IceKick.parcelState(this, value, beforeChange, afterChange)
+                                            beforeChange: ((T, T) -> Boolean)? = null,
+                                            afterChange: ((T, T) -> Unit)? = null) = IceKick.serialState(this, value, beforeChange, afterChange)
+fun <T : Parcelable> Activity.parcelState(value: T,
+                                          beforeChange: ((T, T) -> Boolean)? = null,
+                                          afterChange: ((T, T) -> Unit)? = null) = IceKick.parcelState(this, value, beforeChange, afterChange)
 
 fun <T> Activity.nullableState(bundler: Bundler<T>,
-                               beforeChange: ((T?, T?) -> Boolean)?,
-                               afterChange: ((T?, T?) -> Unit)?) = IceKick.nullableState(this, bundler, beforeChange, afterChange)
-fun <T : Serializable> Activity.nullableSerialState(beforeChange: ((T?, T?) -> Boolean)?,
-                                                    afterChange: ((T?, T?) -> Unit)?) = IceKick.nullableSerialState(this, beforeChange, afterChange)
-fun <T : Parcelable> Activity.nullableParcelState(beforeChange: ((T?, T?) -> Boolean)?,
-                                                  afterChange: ((T?, T?) -> Unit)?) = IceKick.nullableParcelState(this, beforeChange, afterChange)
+                               beforeChange: ((T?, T?) -> Boolean)? = null,
+                               afterChange: ((T?, T?) -> Unit)? = null) = IceKick.nullableState(this, bundler, beforeChange, afterChange)
+fun <T : Serializable> Activity.serialNullableState(beforeChange: ((T?, T?) -> Boolean)? = null,
+                                                    afterChange: ((T?, T?) -> Unit)? = null) = IceKick.serialNullableState(this, beforeChange, afterChange)
+fun <T : Parcelable> Activity.parcelNullableState(beforeChange: ((T?, T?) -> Boolean)? = null,
+                                                  afterChange: ((T?, T?) -> Unit)? = null) = IceKick.parcelNullableState(this, beforeChange, afterChange)
 
 fun <T> Activity.lateState(bundler: Bundler<T>,
-                           beforeChange: ((T?, T) -> Boolean)?,
-                           afterChange: ((T?, T) -> Unit)?) = IceKick.lateState(this, bundler, beforeChange, afterChange)
-fun <T : Serializable> Activity.lateSerialState(beforeChange: ((T?, T) -> Boolean)?,
-                                                afterChange: ((T?, T) -> Unit)?) = IceKick.lateSerialState(this, beforeChange, afterChange)
-fun <T : Parcelable> Activity.lateParcelState(beforeChange: ((T?, T) -> Boolean)?,
-                                              afterChange: ((T?, T) -> Unit)?) = IceKick.lateParcelState(this, beforeChange, afterChange)
+                           beforeChange: ((T?, T) -> Boolean)? = null,
+                           afterChange: ((T?, T) -> Unit)? = null) = IceKick.lateState(this, bundler, beforeChange, afterChange)
+fun <T : Serializable> Activity.serialLateState(beforeChange: ((T?, T) -> Boolean)? = null,
+                                                afterChange: ((T?, T) -> Unit)? = null) = IceKick.serialLateState(this, beforeChange, afterChange)
+fun <T : Parcelable> Activity.parcelLateState(beforeChange: ((T?, T) -> Boolean)? = null,
+                                              afterChange: ((T?, T) -> Unit)? = null) = IceKick.parcelLateState(this, beforeChange, afterChange)
 
 fun Activity.freezeInstanceState(outState: Bundle) = IceKick.freezeInstanceState(this, outState)
 fun Activity.unfreezeInstanceState(savedInstanceState: Bundle?) = IceKick.unfreezeInstanceState(this, savedInstanceState)

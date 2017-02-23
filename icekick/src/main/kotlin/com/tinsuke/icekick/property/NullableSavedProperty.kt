@@ -4,9 +4,9 @@ import android.os.Bundle
 import com.tinsuke.icekick.bundler.Bundler
 import kotlin.reflect.KProperty
 
-internal class NullableSavedProperty<T>(var bundler: Bundler,
-                                        var beforeChange: ((T?, T?) -> Boolean)? = null,
-                                        var afterChange: ((T?, T?) -> Unit)? = null) : BaseSavedProperty<T?>() {
+internal class NullableSavedProperty<T : B, B>(var bundler: Bundler<B>,
+                                               var beforeChange: ((T?, T?) -> Boolean)? = null,
+                                               var afterChange: ((T?, T?) -> Unit)? = null) : BaseSavedProperty<T?>() {
     var value: T? = null
 
     override fun getValue(thisRef: Any, property: KProperty<*>) = value as? T

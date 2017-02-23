@@ -4,10 +4,10 @@ import android.os.Bundle
 import com.tinsuke.icekick.bundler.Bundler
 import kotlin.reflect.KProperty
 
-internal class SavedProperty<T>(var bundler: Bundler,
-                                var value: T,
-                                var beforeChange: ((T, T) -> Boolean)? = null,
-                                var afterChange: ((T, T) -> Unit)? = null) : BaseSavedProperty<T>() {
+internal class SavedProperty<T : B, B>(var bundler: Bundler<B>,
+                                       var value: T,
+                                       var beforeChange: ((T, T) -> Boolean)? = null,
+                                       var afterChange: ((T, T) -> Unit)? = null) : BaseSavedProperty<T>() {
 
     override fun getValue(thisRef: Any, property: KProperty<*>) = value
 

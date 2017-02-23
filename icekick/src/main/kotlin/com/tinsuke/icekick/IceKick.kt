@@ -10,7 +10,6 @@ import com.tinsuke.icekick.property.LateSavedProperty
 import com.tinsuke.icekick.property.NullableSavedProperty
 import com.tinsuke.icekick.property.SavedProperty
 import java.io.Serializable
-import java.security.InvalidParameterException
 import java.util.*
 import kotlin.properties.ReadWriteProperty
 
@@ -23,63 +22,76 @@ internal object IceKick {
 
     private fun getOrPutSavedProperties(instance: Any) = savedInstances.getOrPut(instance) { mutableListOf() }
 
-    private fun bundlerForClass(clazz: Class<*>): Bundler {
-        if (Serializable::class.java.isAssignableFrom(clazz)) {
-            return serializableBundler
-        }
-        if (Parcelable::class.java.isAssignableFrom(clazz)) {
-            return parcelableBundler
-        }
-        throw InvalidParameterException("Only Serializable and Parcelable are supported")
-    }
-
-    fun <T : Any> state(instance: Any,
-                        value: T,
-                        bundler: Bundler,
-                        beforeChange: ((T, T) -> Boolean)?,
-                        afterChange: ((T, T) -> Unit)?): ReadWriteProperty<Any, T> {
+    fun <T> state(instance: Any,
+                  value: T,
+                  bundler: Bundler<T>,
+                  beforeChange: ((T, T) -> Boolean)?,
+                  afterChange: ((T, T) -> Unit)?): ReadWriteProperty<Any, T> {
         return SavedProperty(bundler, value, beforeChange, afterChange).apply {
             getOrPutSavedProperties(instance).add(this)
         }
     }
-
-    fun <T : Any> state(instance: Any,
-                        value: T,
-                        beforeChange: ((T, T) -> Boolean)?,
-                        afterChange: ((T, T) -> Unit)?): ReadWriteProperty<Any, T> {
-        return state(instance, value, bundlerForClass(value.javaClass), beforeChange, afterChange)
+    fun <T : Serializable> serialState(instance: Any,
+                                       value: T,
+                                       beforeChange: ((T, T) -> Boolean)?,
+                                       afterChange: ((T, T) -> Unit)?): ReadWriteProperty<Any, T> {
+        return SavedProperty(serializableBundler, value, beforeChange, afterChange).apply {
+            getOrPutSavedProperties(instance).add(this)
+        }
     }
-
-    fun <T> nullableState(instance: Any,
-                          bundler: Bundler,
-                          beforeChange: ((T?, T?) -> Boolean)?,
-                          afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
-        return NullableSavedProperty(bundler, beforeChange, afterChange).apply {
+    fun <T : Parcelable> parcelState(instance: Any,
+                                     value: T,
+                                     beforeChange: ((T, T) -> Boolean)?,
+                                     afterChange: ((T, T) -> Unit)?): ReadWriteProperty<Any, T> {
+        return SavedProperty(parcelableBundler, value, beforeChange, afterChange).apply {
             getOrPutSavedProperties(instance).add(this)
         }
     }
 
-    fun <T> nullableState(instance: Any,
-                          clazz: Class<T>,
-                          beforeChange: ((T?, T?) -> Boolean)?,
-                          afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
-        return nullableState(instance, bundlerForClass(clazz), beforeChange, afterChange)
+    fun <T> state(instance: Any,
+                  bundler: Bundler<T>,
+                  beforeChange: ((T?, T?) -> Boolean)?,
+                  afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
+        return NullableSavedProperty(bundler, beforeChange, afterChange).apply {
+            getOrPutSavedProperties(instance).add(this)
+        }
+    }
+    fun <T : Serializable> serialState(instance: Any,
+                                       beforeChange: ((T?, T?) -> Boolean)?,
+                                       afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
+        return NullableSavedProperty(serializableBundler, beforeChange, afterChange).apply {
+            getOrPutSavedProperties(instance).add(this)
+        }
+    }
+    fun <T : Parcelable> parcelState(instance: Any,
+                                     beforeChange: ((T?, T?) -> Boolean)?,
+                                     afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
+        return NullableSavedProperty(parcelableBundler, beforeChange, afterChange).apply {
+            getOrPutSavedProperties(instance).add(this)
+        }
     }
 
     fun <T> lateState(instance: Any,
-                      bundler: Bundler,
+                      bundler: Bundler<T>,
                       beforeChange: ((T?, T) -> Boolean)?,
                       afterChange: ((T?, T) -> Unit)?): ReadWriteProperty<Any, T> {
         return LateSavedProperty(bundler, beforeChange, afterChange).apply {
             getOrPutSavedProperties(instance).add(this)
         }
     }
-
-    fun <T> lateState(instance: Any,
-                      clazz: Class<T>,
-                      beforeChange: ((T?, T) -> Boolean)?,
-                      afterChange: ((T?, T) -> Unit)?): ReadWriteProperty<Any, T> {
-        return lateState(instance, bundlerForClass(clazz), beforeChange, afterChange)
+    fun <T : Serializable> serialLateState(instance: Any,
+                                           beforeChange: ((T?, T) -> Boolean)?,
+                                           afterChange: ((T?, T) -> Unit)?): ReadWriteProperty<Any, T> {
+        return LateSavedProperty(serializableBundler, beforeChange, afterChange).apply {
+            getOrPutSavedProperties(instance).add(this)
+        }
+    }
+    fun <T : Parcelable> parcelLateState(instance: Any,
+                                         beforeChange: ((T?, T) -> Boolean)?,
+                                         afterChange: ((T?, T) -> Unit)?): ReadWriteProperty<Any, T> {
+        return LateSavedProperty(parcelableBundler, beforeChange, afterChange).apply {
+            getOrPutSavedProperties(instance).add(this)
+        }
     }
 
     fun freezeInstanceState(instance: Any, outState: Bundle) {

@@ -3,24 +3,24 @@
 
 ```kotlin
 class MyActivity : Activity() {
+  // There out-of-the-box support for Serializable
   // A state that can't be null, needs a default value
-  private var nonNullState: Int by state(0)
+  private var nonNullState: Int by serialState(0)
 
   // A state that can be null
-  private var nullableState: Int? by nullableState(Int::class.java)
-  
-  // A state that behaves as if the variable had `lateinit` modifier
-  private var lateinitState: String by lateState(String::class.java)
+  private var nullableState: Int? by serialState()
 
-  // Lazier developers can even shorten them
-  private var nonNullState by state(0) // Type inferred by the default value
-  private var nullableState by nullableState(Int::class.java) // Needs the type information
-  private var lateinitState by lateState(String::class.java)  // Same
+  // A state that behaves as if the variable had the 'lateinit' modifier
+  private var lateinitState: String by serialLateState()
+
+  // And for Parcelable too
+  private var resourceUri: Uri by parcelState(MY_DEFAULT_URI)
+  private var nullableIntentState: Intent? by parcelState()
+  private val lateinitPacelState: Intent by parcelLateState()
 }
 ```
 
-These methods work for `Serializable` and `Parcelable` objects and are available on subclasses of `Activity`, `Fragment`,
-the support library `Fragment`, and `View`.
+These methods are available on subclasses of `Activity`, `Fragment`, the support library `Fragment`, and `View`.
 
 If you need to save/restore an object that can't be made `Serializable` or `Parcelable`, a custom `Bundler` can be specified:
 
@@ -30,21 +30,21 @@ class MyFragment : Fragment() {
   class MyData(var value: Int)
 
   // Your Bundler
-  class MyDataBundler : Bundler {
-    override fun save(bundle: Bundle, key: String, value: Any?) {
+  class MyDataBundler : Bundler<MyData> {
+    override fun save(bundle: Bundle, key: String, value: MyData?) {
       val myData = value as? MyData ?: return
       bundle.putInt(key, myData.value)
     }
 
-    override fun load(bundle: Bundle, key: String): Any? {
-      return MyData(bundle.getInt(key))
+    override fun load(bundle: Bundle, key: String): MyData? {
+      return if (bundle.containsKey(key)) MyData(bundle.getInt(key)) ?: null
     }
   }
 
   // Usage
-  private var myData by state(MyData(100), MyDataBundler())
-  private var nullableMyData by nullableState(MyDataBundler())
-  private var lateinitMyData by lateState(MyDataBundler())
+  private var myData: MyData by state(MyData(100), MyDataBundler())
+  private var nullableMyData: MyData? by state(MyDataBundler())
+  private var lateinitMyData: MyData by lateState(MyDataBundler())
 }
 ```
 
@@ -65,7 +65,7 @@ and add the dependency:
 ```gradle
 dependencies {
   ...
-  compile 'com.github.tinsukE:icekick:0.1'
+  compile 'com.github.tinsukE:icekick:0.2'
   ...
 }
 ```

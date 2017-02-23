@@ -5,39 +5,34 @@ import android.os.Parcelable
 import android.view.View
 import com.tinsuke.icekick.IceKick
 import com.tinsuke.icekick.bundler.Bundler
-import kotlin.properties.ReadWriteProperty
+import java.io.Serializable
 
-fun <T : Any> View.state(value: T,
-                         beforeChange: ((T, T) -> Boolean)? = null,
-                         afterChange: ((T, T) -> Unit)? = null): ReadWriteProperty<Any, T> {
-    return IceKick.state(this, value, beforeChange, afterChange)
-}
-fun <T : Any> View.state(value: T,
-                         bundler: Bundler,
-                         beforeChange: ((T, T) -> Boolean)?,
-                         afterChange: ((T, T) -> Unit)?): ReadWriteProperty<Any, T> {
-    return IceKick.state(this, value, bundler, beforeChange, afterChange)
-}
-fun <T> View.nullableState(clazz: Class<T>,
-                           beforeChange: ((T?, T?) -> Boolean)? = null,
-                           afterChange: ((T?, T?) -> Unit)? = null): ReadWriteProperty<Any, T?> {
-    return IceKick.nullableState(this, clazz, beforeChange, afterChange)
-}
-fun <T> View.nullableState(bundler: Bundler,
-                           beforeChange: ((T?, T?) -> Boolean)?,
-                           afterChange: ((T?, T?) -> Unit)?): ReadWriteProperty<Any, T?> {
-    return IceKick.nullableState(this, bundler, beforeChange, afterChange)
-}
-fun <T> View.lateState(clazz: Class<T>,
+fun <T> View.state(value: T,
+                   bundler: Bundler<T>,
+                   beforeChange: ((T, T) -> Boolean)? = null,
+                   afterChange: ((T, T) -> Unit)? = null) = IceKick.state(this, value, bundler, beforeChange, afterChange)
+fun <T : Serializable> View.serialState(value: T,
+                                        beforeChange: ((T, T) -> Boolean)? = null,
+                                        afterChange: ((T, T) -> Unit)? = null) = IceKick.serialState(this, value, beforeChange, afterChange)
+fun <T : Parcelable> View.parcelState(value: T,
+                                      beforeChange: ((T, T) -> Boolean)? = null,
+                                      afterChange: ((T, T) -> Unit)? = null) = IceKick.parcelState(this, value, beforeChange, afterChange)
+
+fun <T> View.state(bundler: Bundler<T>,
+                   beforeChange: ((T?, T?) -> Boolean)? = null,
+                   afterChange: ((T?, T?) -> Unit)? = null) = IceKick.state(this, bundler, beforeChange, afterChange)
+fun <T : Serializable> View.serialState(beforeChange: ((T?, T?) -> Boolean)? = null,
+                                        afterChange: ((T?, T?) -> Unit)? = null) = IceKick.serialState(this, beforeChange, afterChange)
+fun <T : Parcelable> View.parcelState(beforeChange: ((T?, T?) -> Boolean)? = null,
+                                      afterChange: ((T?, T?) -> Unit)? = null) = IceKick.parcelState(this, beforeChange, afterChange)
+
+fun <T> View.lateState(bundler: Bundler<T>,
                        beforeChange: ((T?, T) -> Boolean)? = null,
-                       afterChange: ((T?, T) -> Unit)? = null): ReadWriteProperty<Any, T> {
-    return IceKick.lateState(this, clazz, beforeChange, afterChange)
-}
-fun <T> View.lateState(bundler: Bundler,
-                       beforeChange: ((T?, T) -> Boolean)? = null,
-                       afterChange: ((T?, T) -> Unit)? = null): ReadWriteProperty<Any, T> {
-    return IceKick.lateState(this, bundler, beforeChange, afterChange)
-}
+                       afterChange: ((T?, T) -> Unit)? = null) = IceKick.lateState(this, bundler, beforeChange, afterChange)
+fun <T : Serializable> View.serialLateState(beforeChange: ((T?, T) -> Boolean)? = null,
+                                            afterChange: ((T?, T) -> Unit)? = null) = IceKick.serialLateState(this, beforeChange, afterChange)
+fun <T : Parcelable> View.parcelLateState(beforeChange: ((T?, T) -> Boolean)? = null,
+                                          afterChange: ((T?, T) -> Unit)? = null) = IceKick.parcelLateState(this, beforeChange, afterChange)
 
 fun View.freezeInstanceState(parcelable: Parcelable?): Parcelable? {
     if (IceKick.savedInstances[this] == null) {

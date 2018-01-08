@@ -21,13 +21,4 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-artifacts {
-    archives sourcesJar
-}
  

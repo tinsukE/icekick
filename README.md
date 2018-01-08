@@ -65,7 +65,7 @@ and add the dependency:
 ```gradle
 dependencies {
   ...
-  compile 'com.github.tinsukE:icekick:0.2'
+  compile 'com.github.tinsukE:icekick:0.3'
   ...
 }
 ```
